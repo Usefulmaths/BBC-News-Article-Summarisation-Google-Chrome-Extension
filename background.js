@@ -1,14 +1,14 @@
-API_TOKEN = "insert API token here"
-MODEL = "facebook/bart-large-cnn"
+const API_TOKEN = "{insert API token here}"
+const MODEL = "facebook/bart-large-cnn"
 
 chrome.tabs.query({active: true, currentWindow: true}, async function(tabs) {
-	currentTab = tabs[0]
+	const currentTab = tabs[0]
 
 	toggleLoader(true)
 	displayInformation("", "")
 
-	tabInformation = await getTabInformation(currentTab);
-	modelResult = await runModel(MODEL, tabInformation["textToSummarise"]);
+	const tabInformation = await getTabInformation(currentTab);
+	const modelResult = await runModel(MODEL, tabInformation["textToSummarise"]);
 
 	toggleLoader(false)
 	displayInformation(tabInformation["textTitle"], modelResult[0]['summary_text']);
@@ -47,9 +47,10 @@ async function getTabInformation(tab) {
 	const response = await fetch(tab.url)
 	const text = await response.text()
 
-	parser = new DOMParser();
-	doc = parser.parseFromString(text, 'text/html');
-	tabInformation = {
+	const parser = new DOMParser();
+	const doc = parser.parseFromString(text, 'text/html');
+	
+	const tabInformation = {
 		"textToSummarise": doc.getElementById('main-content').textContent,
 		"textTitle": doc.getElementById('main-heading').textContent
 	}
@@ -62,8 +63,8 @@ async function runModel(model, text) {
 	/**
 	 * Sends a request to a specified summarisation model given some text to summarise. 
 	 **/
-	data = JSON.stringify({"inputs": text});
-	endpoint = `https://api-inference.huggingface.co/models/${model}`;
+	const data = JSON.stringify({"inputs": text});
+	const endpoint = `https://api-inference.huggingface.co/models/${model}`;
 	
 	const response = await fetch(
         endpoint,
@@ -78,3 +79,6 @@ async function runModel(model, text) {
 
     return result;
 }
+
+
+
